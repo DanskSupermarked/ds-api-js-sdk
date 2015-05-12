@@ -75,7 +75,6 @@ gulp.task('deploy', ['build', 'test'], function() {
     containerName: 'api',
     serviceOptions: ['dansksupermarked', process.env.BLOB_TOKEN],
     folder: 'ds-api/' + pkg.version,
-    zip: true,
     deleteExistingBlobs: false,
     metadata: {
       cacheControl: 'public, max-age=31530000', // cache in browser
