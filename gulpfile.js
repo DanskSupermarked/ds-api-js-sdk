@@ -1,5 +1,3 @@
-process.env.BLOB_TOKEN = 'KMM6cN3v7XImXOhEy/UcZPRsajjEoGU4VHr4kYJEMOWLTdZHlTcASxYfv7pY38u3XWJ4I0mgGedMNSBmWT9P7A==';
-
 var gulp = require('gulp');
 
 // Lint

@@ -1,13 +1,10 @@
 {
   "name": "ds-api",
   "version": "1.0.0",
-  "publishConfig": {
-    "registry": "http://ds-private-npm.azurewebsites.net"
-  },
-  "description": "asdasd",
+  "description": "Javascript SDK for Dansk Supermarked API",
   "repository": {
     "type": "git",
-    "url": "https://bitbucket.org/DanskSupermarked/team-npm-packages/src/ds-api-sdk-js/"
+    "url": "https://github.com/DanskSupermarked/ds-api-js-sdk.git"
   },
   "main": "index.js",
   "dependencies": {
@@ -16,9 +13,10 @@
     "node-fetch": "1.2.1"
   },
   "scripts": {
-    "test": "gulp test"
+    "test": "gulp test",
+    "deploy": "gulp deploy"
   },
-  "author": "Jakob Viskum Damgaard",
+  "author": "Dansk Supermarked WebDevs",
   "license": "ISC",
   "devDependencies": {
     "browser-sync": "^2.7.1",
