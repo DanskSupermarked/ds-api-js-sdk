@@ -178,7 +178,7 @@ describe('ds-api', function() {
 
   });
 
-  describe('#.request(resource, method, query)', function() {
+  describe('#.request(resource, method, query, data)', function() {
 
     it('should fetch data from the API', function(done) {
       dsApi
@@ -282,12 +282,13 @@ describe('ds-api', function() {
 
   describe('#.get(resource, query)', function() {
 
-    it('should be a shorthand for #.request(resource, "GET", query)', function(done) {
+    it('should be a shorthand for #.request(resource, "GET", query, null)', function(done) {
       dsApi
-        .get('stores')
+        .get('stores', {brand: 'bilka'})
         .then(function() {
-          expect(fetchStub.args[0][0]).to.eql('https://api.dansksupermarked.dk/v1/stores');
+          expect(fetchStub.args[0][0]).to.eql('https://api.dansksupermarked.dk/v1/stores?brand=bilka');
           expect(fetchStub.args[0][1].method).to.eql('GET');
+          expect(fetchStub.args[0][1].data).to.not.exist;
           done();
         })
         .catch(done);
@@ -295,14 +296,15 @@ describe('ds-api', function() {
 
   });
 
-  describe('#.post(resource, query)', function() {
+  describe('#.post(resource, data)', function() {
 
-    it('should be a shorthand for #.request(resource, "POST", query)', function(done) {
+    it('should be a shorthand for #.request(resource, "POST", {}, data)', function(done) {
       dsApi
-        .post('stores')
+        .post('stores', {brand: 'bilka'})
         .then(function() {
           expect(fetchStub.args[0][0]).to.eql('https://api.dansksupermarked.dk/v1/stores');
           expect(fetchStub.args[0][1].method).to.eql('POST');
+          expect(fetchStub.args[0][1].data).to.eql({brand: 'bilka'});
           done();
         })
         .catch(done);
@@ -312,12 +314,13 @@ describe('ds-api', function() {
 
   describe('#.put(resource, query)', function() {
 
-    it('should be a shorthand for #.request(resource, "PUT", query)', function(done) {
+    it('should be a shorthand for #.request(resource, "PUT", {}, data)', function(done) {
       dsApi
-        .put('stores')
+        .put('stores', {brand: 'bilka'})
         .then(function() {
           expect(fetchStub.args[0][0]).to.eql('https://api.dansksupermarked.dk/v1/stores');
           expect(fetchStub.args[0][1].method).to.eql('PUT');
+          expect(fetchStub.args[0][1].data).to.eql({brand: 'bilka'});
           done();
         })
         .catch(done);
@@ -325,14 +328,15 @@ describe('ds-api', function() {
 
   });
 
-  describe('#.del(resource, query)', function() {
+  describe('#.del(resource)', function() {
 
-    it('should be a shorthand for #.request(resource, "DELETE", query)', function(done) {
+    it('should be a shorthand for #.request(resource, "DELETE")', function(done) {
       dsApi
         .del('stores')
         .then(function() {
           expect(fetchStub.args[0][0]).to.eql('https://api.dansksupermarked.dk/v1/stores');
           expect(fetchStub.args[0][1].method).to.eql('DELETE');
+          expect(fetchStub.args[0][1].data).to.not.exist;
           done();
         })
         .catch(done);
