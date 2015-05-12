@@ -15,8 +15,8 @@ gulp.task('lint', function() {
 gulp.task('test:node', ['build:es5'], function() {
   var mocha = require('gulp-mocha');
   return gulp.src('test/**/*.js', {
-    read: false
-  })
+      read: false
+    })
     .pipe(mocha({
       reporter: 'spec'
     }));
@@ -25,9 +25,9 @@ gulp.task('test:node', ['build:es5'], function() {
 gulp.task('test:browser', ['build'], function() {
   var mochaPhantomJS = require('gulp-mocha-phantomjs');
   return gulp.src([
-    'test/polyfill.io.html',
-    'test/jquery-polyfills.html'
-  ])
+      'test/polyfill.io.html',
+      'test/jquery-polyfills.html'
+    ])
     .pipe(mochaPhantomJS({
       reporter: 'spec'
     }));
@@ -48,7 +48,8 @@ gulp.task('build:es5', function() {
       modules: 'umdStrict'
     }))
     .pipe(gulp.dest('dist'))
-    .pipe(require('gulp-uglify')('ds-api.min.js'))
+    .pipe(require('gulp-uglify')())
+    .pipe(require('gulp-rename')('ds-api.min.js'))
     .pipe(gulp.dest('dist'));
 });
 
@@ -56,28 +57,29 @@ gulp.task('build:es5', function() {
 gulp.task('build:jquery-polyfill', function() {
   return gulp.src('lib/jquery-polyfill.js')
     .pipe(gulp.dest('dist'))
-    .pipe(require('gulp-uglifyjs')('jquery-polyfill.min.js'))
+    .pipe(require('gulp-uglify')())
+    .pipe(require('gulp-rename')('jquery-polyfill.min.js'))
     .pipe(gulp.dest('dist'));
 });
 
 gulp.task('build', ['build:es5', 'build:jquery-polyfill']);
 
 gulp.task('deploy', ['build', 'test'], function() {
-    var deployCdn = require('gulp-deploy-azure-cdn');
-    var gutil = require('gulp-util');
-    var pkg = require('./package.json');
+  var deployCdn = require('gulp-deploy-azure-cdn');
+  var gutil = require('gulp-util');
+  var pkg = require('./package.json');
 
-    return gulp.src(['**/*.*'], {
-        cwd: 'dist'
-    }).pipe(deployCdn({
-        containerName: 'api',
-        serviceOptions: ['dansksupermarked', process.env.BLOB_TOKEN],
-        folder: 'ds-api/' + pkg.version,
-        zip: true,
-        deleteExistingBlobs: false,
-        metadata: {
-            cacheControl: 'public, max-age=31530000', // cache in browser
-            cacheControlHeader: 'public, max-age=31530000' // cache in azure CDN. As this data does not change, we set it to 1 year
-        }
-    })).on('error', gutil.log);
+  return gulp.src(['**/*.*'], {
+    cwd: 'dist'
+  }).pipe(deployCdn({
+    containerName: 'api',
+    serviceOptions: ['dansksupermarked', process.env.BLOB_TOKEN],
+    folder: 'ds-api/' + pkg.version,
+    zip: true,
+    deleteExistingBlobs: false,
+    metadata: {
+      cacheControl: 'public, max-age=31530000', // cache in browser
+      cacheControlHeader: 'public, max-age=31530000' // cache in azure CDN. As this data does not change, we set it to 1 year
+    }
+  })).on('error', gutil.log);
 });
