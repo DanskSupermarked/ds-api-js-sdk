@@ -48,7 +48,7 @@ gulp.task('build:es5', function() {
       modules: 'umdStrict'
     }))
     .pipe(gulp.dest('dist'))
-    .pipe(require('gulp-uglifyjs')('ds-api.min.js'))
+    .pipe(require('gulp-uglify')('ds-api.min.js'))
     .pipe(gulp.dest('dist'));
 });
 
