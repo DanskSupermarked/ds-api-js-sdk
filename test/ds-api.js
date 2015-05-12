@@ -153,7 +153,7 @@ var stores = [{
 describe('ds-api', function() {
 
   beforeEach(function() {
-    dsApi.setKey('test');
+    dsApi.auth('test');
     dsApi.setApiVersion('v1');
     fetchStub = sinon.stub();
     fetchStub.returns(new Promise(function(resolve) {

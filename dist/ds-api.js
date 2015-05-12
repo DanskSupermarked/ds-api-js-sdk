@@ -47,7 +47,7 @@
       });
     }
 
-    // URLify the query Map
+    // URLify the query map
     var queryStrings = [];
     Object.keys(queryMap).forEach(function (key) {
       var value = queryMap[key];
@@ -86,11 +86,11 @@
    * any requests are made.
    * @param {string} key A unique token
    */
-  var setKey = function setKey(key) {
+  var auth = function auth(key) {
     authKey = key;
   };
 
-  exports.setKey = setKey;
+  exports.auth = auth;
   /**
    * Change the version of the API from the default.
    * @param {string} version Formatted as `v1`, `v2`... `vn`
@@ -116,7 +116,7 @@
       return Promise.reject(new Error('authentication key was not set. Use the auth method'));
     }
     if (!resource) {
-      return Promise.reject(new TypeError('needs a `resource` string as second parameter.'));
+      return Promise.reject(new TypeError('needs a `resource` string as first parameter.'));
     }
 
     // Build URL
