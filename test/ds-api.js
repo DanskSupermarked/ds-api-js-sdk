@@ -2,7 +2,7 @@
 var expect;
 var sinon;
 var dsApi;
-var VERSION = '1.0.0';
+var VERSION = '1.0.1';
 var fetchStub;
 
 /**
