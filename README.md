@@ -10,6 +10,9 @@
 - [How to use the Dansk Supermarked API](https://developer.dansksupermarked.dk/v1/overview/)
 
 ## Changelog
+### 1.0.1
+- Map headers to javascript object.
+
 ### 1.0.0
 - not dependent of jQuery, but using latest EcmaScript methods, which should be polyfilled with [polyfill.io](https://cdn.polyfill.io/v1/docs/)
 - jQuery polyfill added
