@@ -13,7 +13,7 @@
 })(this, function (exports) {
   'use strict';
 
-  var VERSION = '1.0.0';
+  var VERSION = '1.0.1';
   exports.VERSION = VERSION;
   var API_URL = 'https://api.dansksupermarked.dk/';
   var MAX_PER_PAGE = 100;
@@ -133,12 +133,16 @@
       data: data
     }).then(function (response) {
       return response.json().then(function (data) {
+        var headers = {};
+        response.headers.forEach(function (value, key) {
+          headers[key.toLowerCase()] = value;
+        });
         return {
           data: data,
           status: response.status,
-          headers: response.headers,
-          count: parseInt(response.headers['x-total-count'], 10) || 1,
-          pagination: parseLinkHeaders(response.headers.link),
+          headers: headers,
+          count: parseInt(response.headers.get('x-total-count'), 10) || 1,
+          pagination: parseLinkHeaders(response.headers.get('link')),
           url: url
         };
       });

@@ -146,6 +146,23 @@ var stores = [{
   }
 }];
 
+// Fake Headers Map object
+var Headers = function() {
+  this._headers = {};
+};
+Headers.prototype.forEach = function(callback) {
+  var self = this;
+  Object.keys(self._headers).forEach(function(key) {
+    callback(self._headers[key], key);
+  });
+};
+Headers.prototype.set = function(key, value) {
+  this._headers[key] = value;
+};
+Headers.prototype.get = function(key) {
+  return this._headers[key];
+};
+
 /**
  * Tests
  */
@@ -157,15 +174,15 @@ describe('ds-api', function() {
     dsApi.setApiVersion('v1');
     fetchStub = sinon.stub();
     fetchStub.returns(new Promise(function(resolve) {
+      var headers = new Headers();
+      headers.set('x-total-count', stores.length);
+      headers.set('link', '<https://api.dansksupermarked.dk/v1/stores?per_page=10&page=1>; rel="first", <https://api.dansksupermarked.dk/v1/stores?per_page=10&page=2>; rel="last", <https://api.dansksupermarked.dk/v1/stores?per_page=10&page=2>; rel="next"');
       resolve({
         json: function() {
           return Promise.resolve(stores.slice(0, 10));
         },
         status: 200,
-        headers: {
-          'x-total-count': stores.length,
-          link: '<https://api.dansksupermarked.dk/v1/stores?per_page=10&page=1>; rel="first", <https://api.dansksupermarked.dk/v1/stores?per_page=10&page=2>; rel="last", <https://api.dansksupermarked.dk/v1/stores?per_page=10&page=2>; rel="next"'
-        }
+        headers: headers
       });
     }));
   });
@@ -391,15 +408,17 @@ describe('ds-api', function() {
 
     it('should get all instances of a resource (test with 1001 instances - 11 page)', function(done) {
 
+
       fetchStub.returns(new Promise(function(resolve) {
+        var headers = new Headers();
+        headers.set('x-total-count', '1001');
+        headers.set('link', '<https://api.dansksupermarked.dk/v1/stores?per_page=10&page=1>; rel="first", <https://api.dansksupermarked.dk/v1/stores?per_page=10&page=2>; rel="last", <https://api.dansksupermarked.dk/v1/stores?per_page=10&page=2>; rel="next"');
         resolve({
           json: function() {
             return Promise.resolve(stores.slice(0, 10));
           },
           status: 200,
-          headers: {
-            'x-total-count': 1001
-          }
+          headers: headers
         });
       }));
 
