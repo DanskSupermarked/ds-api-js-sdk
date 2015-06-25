@@ -49,9 +49,11 @@
 
     // URLify the query map
     var queryStrings = [];
-    Object.keys(queryMap).forEach(function (key) {
+    Object.keys(queryMap).forEach(function(key) {
       var value = queryMap[key];
-      queryStrings.push('' + key + '=' + value);
+      if (value !== '' && typeof value !== 'undefined') {
+        queryStrings.push('' + key + '=' + value);
+      }
     });
 
     // Attach querystring to final URL
@@ -141,7 +143,7 @@
           data: data,
           status: response.status,
           headers: headers,
-          count: parseInt(response.headers.get('x-total-count'), 10) || 1,
+          count: parseInt(response.headers.get('x-total-count'), 10) || 0,
           pagination: parseLinkHeaders(response.headers.get('link')),
           url: url
         };
