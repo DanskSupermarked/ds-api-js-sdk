@@ -10,6 +10,9 @@
 - [How to use the Dansk Supermarked API](https://developer.dansksupermarked.dk/v1/overview/)
 
 ## Changelog
+### 1.0.2
+- Use HEAD request for counting
+
 ### 1.0.1
 - Map headers to javascript object.
 

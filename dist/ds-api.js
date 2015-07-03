@@ -13,9 +13,9 @@
 })(this, function (exports) {
   'use strict';
 
-  var VERSION = '1.0.1';
+  var VERSION = '1.0.2';
   exports.VERSION = VERSION;
-  var API_URL = 'https://api.dansksupermarked.dk/';
+  var API_URL = 'https://api.dansksupermarked.dk'; // Don't use trailing slash
   var MAX_PER_PAGE = 100;
 
   var apiVersion = 'v1';
@@ -49,11 +49,9 @@
 
     // URLify the query map
     var queryStrings = [];
-    Object.keys(queryMap).forEach(function(key) {
+    Object.keys(queryMap).forEach(function (key) {
       var value = queryMap[key];
-      if (value !== '' && typeof value !== 'undefined') {
-        queryStrings.push('' + key + '=' + value);
-      }
+      queryStrings.push('' + key + '=' + value);
     });
 
     // Attach querystring to final URL
@@ -122,7 +120,18 @@
     }
 
     // Build URL
-    var baseUrl = resource.startsWith(API_URL) ? resource : '' + API_URL + '' + apiVersion + '/' + resource;
+    var baseUrl;
+    if (resource.startsWith(API_URL)) {
+      baseUrl = resource;
+    } else {
+      if (!resource.startsWith('/')) {
+        resource = '/' + resource;
+      }
+      if (!resource.startsWith('/' + apiVersion)) {
+        resource = '/' + apiVersion + resource;
+      }
+      baseUrl = API_URL + resource;
+    }
     var url = buildUrl(baseUrl, query);
 
     // Perform the ajax call
@@ -134,7 +143,7 @@
       },
       data: data
     }).then(function (response) {
-      return response.json().then(function (data) {
+      var prettifyResponse = function prettifyResponse(data) {
         var headers = {};
         response.headers.forEach(function (value, key) {
           headers[key.toLowerCase()] = value;
@@ -143,11 +152,16 @@
           data: data,
           status: response.status,
           headers: headers,
-          count: parseInt(response.headers.get('x-total-count'), 10) || 0,
+          count: parseInt(response.headers.get('x-total-count'), 10) || 1,
           pagination: parseLinkHeaders(response.headers.get('link')),
           url: url
         };
-      });
+      };
+      if (method === 'HEAD') {
+        return prettifyResponse();
+      } else {
+        return response.json().then(prettifyResponse);
+      }
     });
   };
 
@@ -193,14 +207,12 @@
   var count = function count(resource) {
     var query = arguments[1] === undefined ? {} : arguments[1];
 
-    query.per_page = 1;
-    query.page = 1;
-
-    return request(resource, 'GET', query).then(function (response) {
-      if (response.status !== 200) {
-        return Promise.reject(response);
+    return request(resource, 'HEAD', query).then(function (response) {
+      if (response.headers['x-total-count']) {
+        return Promise.resolve(parseInt(response.headers['x-total-count'], 10));
+      } else {
+        return Promise.resolve(0);
       }
-      return parseInt(response.headers['x-total-count'], 10) || 1;
     });
   };
 
@@ -214,31 +226,16 @@
   var getAll = function getAll(resource) {
     var query = arguments[1] === undefined ? {} : arguments[1];
 
-    // Get the first element from the resource. This is just used to retrieve the
-    // X-Total-Count header to be able to calculate all requests that need to be
-    // sent.
-    query.per_page = 1;
-    query.page = 1;
-
     // Get total count
-    return request(resource, 'GET', query).then(function (response) {
+    return count(resource, query).then(function (count) {
 
-      // The first response in used as a container for the final response to the
-      // user. As data is being retrieved it is added to this initial response.
-
-      // No need for pagination because we are retrieving all
-      delete response.pagination;
-
-      // The initial URL is not valid, because it includes pagination queries
-      delete response.url;
-
-      if (response.status !== 200) {
-        return Promise.reject(response);
+      if (count === 0) {
+        return Promise.resolve([]);
       }
 
       // Total number of pages for this resource if we are retrieving MAX per
       // request
-      var pages = Math.ceil(response.count / MAX_PER_PAGE);
+      var pages = Math.ceil(count / MAX_PER_PAGE);
 
       // Perform requests for all pages in parallel
       var requests = [];
@@ -264,14 +261,9 @@
       // When all requests have been fulfilled the data is attached to the initial
       // response, which finally is sent to the user.
       return Promise.all(requests).then(function () {
-        response.data = [];
-        results.forEach(function (result) {
-          return result.forEach(function (val) {
-            return response.data.push(val);
-          });
+        return results.reduce(function (data, result) {
+          return data.concat(result);
         });
-      }).then(function () {
-        return response;
       })['catch'](function (err) {
         return err;
       });
