@@ -2,7 +2,7 @@
 var expect;
 var sinon;
 var dsApi;
-var VERSION = '1.0.1';
+var VERSION = '1.0.2';
 var fetchStub;
 
 /**
@@ -301,7 +301,9 @@ describe('ds-api', function() {
 
     it('should be a shorthand for #.request(resource, "GET", query, null)', function(done) {
       dsApi
-        .get('stores', {brand: 'bilka'})
+        .get('stores', {
+          brand: 'bilka'
+        })
         .then(function() {
           expect(fetchStub.args[0][0]).to.eql('https://api.dansksupermarked.dk/v1/stores?brand=bilka');
           expect(fetchStub.args[0][1].method).to.eql('GET');
@@ -317,11 +319,15 @@ describe('ds-api', function() {
 
     it('should be a shorthand for #.request(resource, "POST", {}, data)', function(done) {
       dsApi
-        .post('stores', {brand: 'bilka'})
+        .post('stores', {
+          brand: 'bilka'
+        })
         .then(function() {
           expect(fetchStub.args[0][0]).to.eql('https://api.dansksupermarked.dk/v1/stores');
           expect(fetchStub.args[0][1].method).to.eql('POST');
-          expect(fetchStub.args[0][1].data).to.eql({brand: 'bilka'});
+          expect(fetchStub.args[0][1].data).to.eql({
+            brand: 'bilka'
+          });
           done();
         })
         .catch(done);
@@ -333,11 +339,15 @@ describe('ds-api', function() {
 
     it('should be a shorthand for #.request(resource, "PUT", {}, data)', function(done) {
       dsApi
-        .put('stores', {brand: 'bilka'})
+        .put('stores', {
+          brand: 'bilka'
+        })
         .then(function() {
           expect(fetchStub.args[0][0]).to.eql('https://api.dansksupermarked.dk/v1/stores');
           expect(fetchStub.args[0][1].method).to.eql('PUT');
-          expect(fetchStub.args[0][1].data).to.eql({brand: 'bilka'});
+          expect(fetchStub.args[0][1].data).to.eql({
+            brand: 'bilka'
+          });
           done();
         })
         .catch(done);
@@ -377,11 +387,21 @@ describe('ds-api', function() {
 
   describe('#.getAll(resource, query)', function() {
 
-    it('should use GET requests', function(done) {
+    it('should use HEAD request to count', function(done) {
       dsApi
         .getAll('stores')
         .then(function() {
-          expect(fetchStub.args[0][1].method).to.eql('GET');
+          expect(fetchStub.args[0][1].method).to.eql('HEAD');
+          done();
+        })
+        .catch(done);
+    });
+
+    it('should use GET requests to recieved data', function(done) {
+      dsApi
+        .getAll('stores')
+        .then(function() {
+          expect(fetchStub.args[1][1].method).to.eql('GET');
           done();
         })
         .catch(done);
@@ -397,9 +417,9 @@ describe('ds-api', function() {
         .getAll('stores')
         .then(function() {
 
-          // One call to get the x-total-count header + one call to get the 11 instances
+          // One call to get the count + one call to get the 11 instances
           expect(fetchStub.args.length).to.eql(2);
-          expect(fetchStub.args[0][0]).to.eql('https://api.dansksupermarked.dk/v1/stores?per_page=1&page=1');
+          expect(fetchStub.args[0][0]).to.eql('https://api.dansksupermarked.dk/v1/stores');
           expect(fetchStub.args[1][0]).to.eql('https://api.dansksupermarked.dk/v1/stores?per_page=100&page=1');
           done();
         })
@@ -428,7 +448,7 @@ describe('ds-api', function() {
 
           // One call to get the x-total-count header + 11 calls to get the 1001 instances
           expect(fetchStub.args.length).to.eql(12);
-          expect(fetchStub.args[0][0]).to.eql('https://api.dansksupermarked.dk/v1/stores?per_page=1&page=1');
+          expect(fetchStub.args[0][0]).to.eql('https://api.dansksupermarked.dk/v1/stores');
           expect(fetchStub.args[1][0]).to.eql('https://api.dansksupermarked.dk/v1/stores?per_page=100&page=1');
           expect(fetchStub.args[5][0]).to.eql('https://api.dansksupermarked.dk/v1/stores?per_page=100&page=5');
           expect(fetchStub.args[11][0]).to.eql('https://api.dansksupermarked.dk/v1/stores?per_page=100&page=11');
