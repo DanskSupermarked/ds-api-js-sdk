@@ -51,7 +51,9 @@
     var queryStrings = [];
     Object.keys(queryMap).forEach(function (key) {
       var value = queryMap[key];
-      queryStrings.push('' + key + '=' + value);
+      if (value) {
+        queryStrings.push('' + key + '=' + value);
+      }
     });
 
     // Attach querystring to final URL
@@ -146,6 +148,14 @@
       var prettifyResponse = function prettifyResponse(data) {
         var headers = {};
         response.headers.forEach(function (value, key) {
+
+          // Firefox bugfix: https://github.com/DanskSupermarked/ds-api-js-sdk/issues/5
+          if (Array.isArray(key)) {
+            var valueTemp = key;
+            key = value;
+            value = valueTemp;
+          }
+
           headers[key.toLowerCase()] = value;
         });
         return {
