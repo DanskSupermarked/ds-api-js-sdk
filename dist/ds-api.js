@@ -13,7 +13,7 @@
 })(this, function (exports) {
   'use strict';
 
-  var VERSION = '1.0.2';
+  var VERSION = '1.0.3';
   exports.VERSION = VERSION;
   var API_URL = 'https://api.dansksupermarked.dk'; // Don't use trailing slash
   var MAX_PER_PAGE = 100;
