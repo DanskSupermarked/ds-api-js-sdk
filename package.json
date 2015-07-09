@@ -1,6 +1,6 @@
 {
   "name": "ds-api",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Javascript SDK for Dansk Supermarked API",
   "repository": {
     "type": "git",

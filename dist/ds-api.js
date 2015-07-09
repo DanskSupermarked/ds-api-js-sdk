@@ -13,7 +13,7 @@
 })(this, function (exports) {
   'use strict';
 
-  var VERSION = '1.0.2';
+  var VERSION = '1.0.3';
   exports.VERSION = VERSION;
   var API_URL = 'https://api.dansksupermarked.dk'; // Don't use trailing slash
   var MAX_PER_PAGE = 100;
@@ -162,7 +162,7 @@
           data: data,
           status: response.status,
           headers: headers,
-          count: parseInt(response.headers.get('x-total-count'), 10) || 1,
+          count: parseInt(response.headers.get('x-total-count'), 10) || 0,
           pagination: parseLinkHeaders(response.headers.get('link')),
           url: url
         };
@@ -219,7 +219,7 @@
 
     return request(resource, 'HEAD', query).then(function (response) {
       if (response.headers['x-total-count']) {
-        return Promise.resolve(parseInt(response.headers['x-total-count'], 10));
+        return Promise.resolve(parseInt(response.headers['x-total-count'], 10) || 0);
       } else {
         return Promise.resolve(0);
       }
