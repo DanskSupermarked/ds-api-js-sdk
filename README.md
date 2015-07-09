@@ -10,6 +10,10 @@
 - [How to use the Dansk Supermarked API](https://developer.dansksupermarked.dk/v1/overview/)
 
 ## Changelog
+### 1.0.3
+- Bugfixes:
+  - Use count 0 if no items are found
+
 ### 1.0.2
 - Use HEAD request for counting
 
