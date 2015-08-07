@@ -13,7 +13,7 @@
 })(this, function (exports) {
   'use strict';
 
-  var VERSION = '1.0.3';
+  var VERSION = '1.0.4';
   exports.VERSION = VERSION;
   var API_URL = 'https://api.dansksupermarked.dk'; // Don't use trailing slash
   var MAX_PER_PAGE = 100;
@@ -52,7 +52,7 @@
     Object.keys(queryMap).forEach(function (key) {
       var value = queryMap[key];
       if (value) {
-        queryStrings.push('' + key + '=' + value);
+        queryStrings.push(key + '=' + value);
       }
     });
 
@@ -110,9 +110,9 @@
    * @return {Promise}             Promise returns an object
    */
   var request = function request(resource) {
-    var method = arguments[1] === undefined ? 'GET' : arguments[1];
-    var query = arguments[2] === undefined ? {} : arguments[2];
-    var data = arguments[3] === undefined ? null : arguments[3];
+    var method = arguments.length <= 1 || arguments[1] === undefined ? 'GET' : arguments[1];
+    var query = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+    var data = arguments.length <= 3 || arguments[3] === undefined ? null : arguments[3];
 
     if (!authKey) {
       return Promise.reject(new Error('authentication key was not set. Use the auth method'));
@@ -123,7 +123,7 @@
 
     // Build URL
     var baseUrl;
-    if (resource.startsWith(API_URL)) {
+    if (resource.startsWith('http')) {
       baseUrl = resource;
     } else {
       if (!resource.startsWith('/')) {
@@ -140,24 +140,18 @@
     return fetch(url, {
       method: method,
       headers: {
-        'Authorization': 'Basic ' + btoa('' + authKey + ':js-sdk'),
+        'Authorization': 'Basic ' + btoa(authKey + ':js-sdk'),
         'Content-Type': 'application/json; charset=utf-8'
       },
       data: data
     }).then(function (response) {
+
       var prettifyResponse = function prettifyResponse(data) {
         var headers = {};
-        response.headers.forEach(function (value, key) {
-
-          // Firefox bugfix: https://github.com/DanskSupermarked/ds-api-js-sdk/issues/5
-          if (Array.isArray(key)) {
-            var valueTemp = key;
-            key = value;
-            value = valueTemp;
-          }
-
-          headers[key.toLowerCase()] = value;
+        ['expires', 'x-ratelimit-limit', 'x-ratelimit-remaining', 'x-ratelimit-reset', 'x-version'].forEach(function (key) {
+          return headers[key] = response.headers.get(key);
         });
+
         return {
           data: data,
           status: response.status,
@@ -215,14 +209,10 @@
    * @return {Promise}             Promise returns integer
    */
   var count = function count(resource) {
-    var query = arguments[1] === undefined ? {} : arguments[1];
+    var query = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
     return request(resource, 'HEAD', query).then(function (response) {
-      if (response.headers['x-total-count']) {
-        return Promise.resolve(parseInt(response.headers['x-total-count'], 10) || 0);
-      } else {
-        return Promise.resolve(0);
-      }
+      return Promise.resolve(response.count || 0);
     });
   };
 
@@ -234,7 +224,7 @@
    * @return {Promise}             Promise returns an object
    */
   var getAll = function getAll(resource) {
-    var query = arguments[1] === undefined ? {} : arguments[1];
+    var query = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
     // Get total count
     return count(resource, query).then(function (count) {
