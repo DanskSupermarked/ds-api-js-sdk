@@ -2,7 +2,7 @@
 var expect;
 var sinon;
 var dsApi;
-var VERSION = '1.0.6';
+var VERSION = '1.1.0';
 var fetchStub;
 
 /**
@@ -12,7 +12,7 @@ if (typeof exports !== 'undefined') {
   // Node test setup
   expect = require('chai').expect;
   sinon = require('sinon');
-  dsApi = require('../');
+  dsApi = require('../dist/ds-api');
   VERSION = require('../package.json').version;
   global.fetch = function() {
     return fetchStub.apply(this, arguments);

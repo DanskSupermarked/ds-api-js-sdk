@@ -11,6 +11,10 @@
 
 ## Changelog
 
+### 1.1.0
+- Removed node hacks
+- No body in request for GET and HEAD requests
+
 ### 1.0.6
 - Added browserify transforms to be able to use babel
 

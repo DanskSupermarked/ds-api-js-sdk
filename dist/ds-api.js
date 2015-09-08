@@ -13,7 +13,7 @@
 })(this, function (exports) {
   'use strict';
 
-  var VERSION = '1.0.6';
+  var VERSION = '1.1.0';
   exports.VERSION = VERSION;
   var API_URL = 'https://api.dansksupermarked.dk'; // Don't use trailing slash
   var MAX_PER_PAGE = 100;
@@ -136,15 +136,20 @@
     }
     var url = buildUrl(baseUrl, query);
 
-    // Perform the ajax call
-    return fetch(url, {
+    var fetchOptions = {
       method: method,
       headers: {
         'Authorization': 'Basic ' + btoa(authKey + ':js-sdk'),
         'Content-Type': 'application/json; charset=utf-8'
-      },
-      body: data ? JSON.stringify(data) : null
-    }).then(function (response) {
+      }
+    };
+
+    if (data && method !== 'HEAD' && method !== 'GET') {
+      fetchOptions.body = JSON.stringify(data);
+    }
+
+    // Perform the ajax call
+    return fetch(url, fetchOptions).then(function (response) {
 
       var prettifyResponse = function prettifyResponse(data) {
         var headers = {};

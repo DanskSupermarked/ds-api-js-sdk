@@ -12,16 +12,6 @@ gulp.task('lint', function() {
     .pipe(jshint.reporter('jshint-stylish'));
 });
 
-gulp.task('test:node', ['build:es5'], function() {
-  var mocha = require('gulp-mocha');
-  return gulp.src('test/**/*.js', {
-      read: false
-    })
-    .pipe(mocha({
-      reporter: 'spec'
-    }));
-});
-
 gulp.task('test:browser', ['build'], function() {
   var mochaPhantomJS = require('gulp-mocha-phantomjs');
   return gulp.src([
@@ -34,10 +24,10 @@ gulp.task('test:browser', ['build'], function() {
 });
 
 // Test code for lint errors andrun unit tests
-gulp.task('test', ['lint', 'test:node', 'test:browser']);
+gulp.task('test', ['lint', 'test:browser']);
 
-gulp.task('tdd', ['lint', 'test:node'], function() {
-  gulp.watch('{lib,test}/**/*.js', ['lint', 'test:node']);
+gulp.task('tdd', ['lint', 'test:browser'], function() {
+  gulp.watch('{lib,test}/**/*.js', ['lint', 'test:browser']);
 });
 
 // Build es5 compatible files using Babel
