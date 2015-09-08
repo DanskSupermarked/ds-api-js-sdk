@@ -2,7 +2,7 @@
 var expect;
 var sinon;
 var dsApi;
-var VERSION = '1.0.4';
+var VERSION = '1.0.6';
 var fetchStub;
 
 /**
@@ -325,9 +325,9 @@ describe('ds-api', function() {
         .then(function() {
           expect(fetchStub.args[0][0]).to.eql('https://api.dansksupermarked.dk/v1/stores');
           expect(fetchStub.args[0][1].method).to.eql('POST');
-          expect(fetchStub.args[0][1].data).to.eql({
+          expect(fetchStub.args[0][1].body).to.eql(JSON.stringify({
             brand: 'bilka'
-          });
+          }));
           done();
         })
         .catch(done);
@@ -345,9 +345,9 @@ describe('ds-api', function() {
         .then(function() {
           expect(fetchStub.args[0][0]).to.eql('https://api.dansksupermarked.dk/v1/stores');
           expect(fetchStub.args[0][1].method).to.eql('PUT');
-          expect(fetchStub.args[0][1].data).to.eql({
+          expect(fetchStub.args[0][1].body).to.eql(JSON.stringify({
             brand: 'bilka'
-          });
+          }));
           done();
         })
         .catch(done);

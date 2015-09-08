@@ -10,6 +10,14 @@
 - [How to use the Dansk Supermarked API](https://developer.dansksupermarked.dk/v1/overview/)
 
 ## Changelog
+
+### 1.0.6
+- Added browserify transforms to be able to use babel
+
+### 1.0.5
+- Bugfixes
+  - Post should use `body` instead of deprecated `data` in fetch
+
 ### 1.0.4
 - Bugfixes:
   - Firefox can not use forEach on Headers in fetch
