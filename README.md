@@ -11,6 +11,9 @@
 
 ## Changelog
 
+### 1.2.0
+- `getAll` now correctly used the query object for all requests
+
 ### 1.1.0
 - Removed node hacks
 - No body in request for GET and HEAD requests

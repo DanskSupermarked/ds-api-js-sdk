@@ -1,6 +1,6 @@
 {
   "name": "ds-api",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Javascript SDK for Dansk Supermarked API",
   "repository": {
     "type": "git",
@@ -15,22 +15,22 @@
   "author": "Dansk Supermarked WebDevs",
   "license": "ISC",
   "devDependencies": {
-    "browser-sync": "^2.8.2",
-    "chai": "^3.2.0",
-    "gulp": "^3.9.0",
-    "gulp-babel": "^5.2.0",
-    "gulp-deploy-azure-cdn": "^2.0.0",
-    "gulp-jscs": "^2.0.0",
-    "gulp-jshint": "^1.11.2",
-    "gulp-mocha": "^2.1.3",
-    "gulp-mocha-phantomjs": "^0.8.1",
-    "gulp-rename": "^1.2.2",
-    "gulp-uglify": "^1.2.0",
-    "gulp-util": "^3.0.6",
-    "jquery": "^2.1.4",
-    "jshint-stylish": "^2.0.1",
-    "mocha": "^2.2.5",
-    "sinon": "^1.15.4"
+    "browser-sync": "2.8.2",
+    "chai": "3.2.0",
+    "gulp": "3.9.0",
+    "gulp-babel": "5.2.0",
+    "gulp-deploy-azure-cdn": "2.0.0",
+    "gulp-jscs": "2.0.0",
+    "gulp-jshint": "1.11.2",
+    "gulp-mocha": "3.0.1",
+    "gulp-mocha-phantomjs": "0.11.0",
+    "gulp-rename": "1.2.2",
+    "gulp-uglify": "2.0.0",
+    "gulp-util": "3.0.6",
+    "jquery": "2.1.4",
+    "jshint-stylish": "2.0.1",
+    "mocha": "3.0.2",
+    "sinon": "1.15.4"
   },
   "engines": {
     "node": ">=0.10.32"
